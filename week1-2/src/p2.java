@@ -1,20 +1,22 @@
-// Problem 2
+// Problem 3
 import java.util.*;
-import java.util.concurrent.*;
-class p2 {
-    ConcurrentHashMap<String,Integer> stock = new ConcurrentHashMap<>();
-    ConcurrentHashMap<String,Queue<Integer>> wait = new ConcurrentHashMap<>();
-
-    void add(String id,int c){
-        stock.put(id,c);
-        wait.put(id,new ConcurrentLinkedQueue<>());
+class p3 {
+    class E{
+        String ip; long exp;
+        E(String i,long t){ip=i;exp=System.currentTimeMillis()+t;}
     }
+    LinkedHashMap<String,E> map=new LinkedHashMap<>(16,0.75f,true){
+        protected boolean removeEldestEntry(Map.Entry e){return size()>100;}
+    };
 
-    synchronized String buy(String id,int u){
-        int s=stock.getOrDefault(id,0);
-        if(s>0){stock.put(id,s-1);return "OK";}
-        wait.get(id).add(u);return "WAIT";
+    String resolve(String d){
+        if(map.containsKey(d)){
+            E e=map.get(d);
+            if(System.currentTimeMillis()<e.exp) return e.ip;
+            map.remove(d);
+        }
+        String ip="1.1.1.1";
+        map.put(d,new E(ip,300000));
+        return ip;
     }
-
-    int check(String id){return stock.getOrDefault(id,0);}
 }
