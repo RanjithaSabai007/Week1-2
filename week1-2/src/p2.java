@@ -1,22 +1,23 @@
-// Problem 3
+// Problem 4
 import java.util.*;
-class p3 {
-    class E{
-        String ip; long exp;
-        E(String i,long t){ip=i;exp=System.currentTimeMillis()+t;}
-    }
-    LinkedHashMap<String,E> map=new LinkedHashMap<>(16,0.75f,true){
-        protected boolean removeEldestEntry(Map.Entry e){return size()>100;}
-    };
+class p4 {
+    HashMap<String,Set<Integer>> map=new HashMap<>();
 
-    String resolve(String d){
-        if(map.containsKey(d)){
-            E e=map.get(d);
-            if(System.currentTimeMillis()<e.exp) return e.ip;
-            map.remove(d);
+    void index(int id,String t){
+        String[] w=t.split(" ");
+        for(int i=0;i+4<w.length;i++){
+            String g=String.join(" ",Arrays.copyOfRange(w,i,i+5));
+            map.computeIfAbsent(g,k->new HashSet<>()).add(id);
         }
-        String ip="1.1.1.1";
-        map.put(d,new E(ip,300000));
-        return ip;
+    }
+
+    int compare(String t,int id){
+        String[] w=t.split(" ");
+        int c=0;
+        for(int i=0;i+4<w.length;i++){
+            String g=String.join(" ",Arrays.copyOfRange(w,i,i+5));
+            if(map.containsKey(g)&&map.get(g).contains(id)) c++;
+        }
+        return c;
     }
 }
