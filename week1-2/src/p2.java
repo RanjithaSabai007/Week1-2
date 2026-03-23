@@ -1,20 +1,20 @@
-// Problem 8
-class p8 {
-    String[] t; int n;
-    p8(int n){this.n=n;t=new String[n];}
-    int h(String s){return Math.abs(s.hashCode())%n;}
+// Problem 2
+import java.util.*;
+import java.util.concurrent.*;
+class p2 {
+    ConcurrentHashMap<String,Integer> stock = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String,Queue<Integer>> wait = new ConcurrentHashMap<>();
 
-    int park(String p){
-        int i=h(p);
-        while(t[i]!=null) i=(i+1)%n;
-        t[i]=p; return i;
+    void add(String id,int c){
+        stock.put(id,c);
+        wait.put(id,new ConcurrentLinkedQueue<>());
     }
 
-    void exit(String p){
-        int i=h(p);
-        while(t[i]!=null){
-            if(t[i].equals(p)){t[i]=null;return;}
-            i=(i+1)%n;
-        }
+    synchronized String buy(String id,int u){
+        int s=stock.getOrDefault(id,0);
+        if(s>0){stock.put(id,s-1);return "OK";}
+        wait.get(id).add(u);return "WAIT";
     }
+
+    int check(String id){return stock.getOrDefault(id,0);}
 }
