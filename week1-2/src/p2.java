@@ -1,23 +1,21 @@
-// Problem 4
+// Problem 5
 import java.util.*;
-class p4 {
-    HashMap<String,Set<Integer>> map=new HashMap<>();
+class p5 {
+    HashMap<String,Integer> views=new HashMap<>();
+    HashMap<String,Set<String>> users=new HashMap<>();
+    HashMap<String,Integer> src=new HashMap<>();
 
-    void index(int id,String t){
-        String[] w=t.split(" ");
-        for(int i=0;i+4<w.length;i++){
-            String g=String.join(" ",Arrays.copyOfRange(w,i,i+5));
-            map.computeIfAbsent(g,k->new HashSet<>()).add(id);
-        }
+    void process(String u,String user,String s){
+        views.put(u,views.getOrDefault(u,0)+1);
+        users.computeIfAbsent(u,k->new HashSet<>()).add(user);
+        src.put(s,src.getOrDefault(s,0)+1);
     }
 
-    int compare(String t,int id){
-        String[] w=t.split(" ");
-        int c=0;
-        for(int i=0;i+4<w.length;i++){
-            String g=String.join(" ",Arrays.copyOfRange(w,i,i+5));
-            if(map.containsKey(g)&&map.get(g).contains(id)) c++;
+    List<String> top(){
+        PriorityQueue<String> pq=new PriorityQueue<>((a,b)->views.get(a)-views.get(b));
+        for(String k:views.keySet()){
+            pq.add(k); if(pq.size()>10) pq.poll();
         }
-        return c;
+        return new ArrayList<>(pq);
     }
 }
